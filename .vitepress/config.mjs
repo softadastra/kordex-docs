@@ -1,11 +1,254 @@
 import { defineConfig } from "vitepress";
 
+const nav = [
+  {
+    text: "Guide",
+    link: "/guide/getting-started",
+  },
+  {
+    text: "CLI",
+    link: "/cli/",
+  },
+  {
+    text: "Modules",
+    link: "/modules/",
+  },
+  {
+    text: "Recipes",
+    link: "/recipes/",
+  },
+  {
+    text: "Reference",
+    link: "/reference/",
+  },
+  {
+    text: "Roadmap",
+    link: "/roadmap",
+  },
+  {
+    text: "Changelog",
+    link: "/changelog",
+  },
+];
+
+const guide = {
+  text: "Guide",
+  collapsed: false,
+  items: [
+    {
+      text: "Getting Started",
+      link: "/guide/getting-started",
+    },
+    {
+      text: "Installation",
+      link: "/guide/installation",
+    },
+    {
+      text: "Project Structure",
+      link: "/guide/project-structure",
+    },
+    {
+      text: "Running Scripts",
+      link: "/guide/running-scripts",
+    },
+    {
+      text: "Permissions",
+      link: "/guide/permissions",
+    },
+    {
+      text: "Imports",
+      link: "/guide/imports",
+    },
+    {
+      text: "TypeScript",
+      link: "/guide/typescript",
+    },
+    {
+      text: "Local-first",
+      link: "/guide/local-first",
+    },
+  ],
+};
+
+const cli = {
+  text: "CLI",
+  collapsed: false,
+  items: [
+    {
+      text: "Overview",
+      link: "/cli/",
+    },
+    {
+      text: "init",
+      link: "/cli/init",
+    },
+    {
+      text: "run",
+      link: "/cli/run",
+    },
+    {
+      text: "repl",
+      link: "/cli/repl",
+    },
+    {
+      text: "check",
+      link: "/cli/check",
+    },
+    {
+      text: "build",
+      link: "/cli/build",
+    },
+    {
+      text: "install",
+      link: "/cli/install",
+    },
+    {
+      text: "update",
+      link: "/cli/update",
+    },
+    {
+      text: "version",
+      link: "/cli/version",
+    },
+  ],
+};
+
+const modules = {
+  text: "Modules",
+  collapsed: false,
+  items: [
+    {
+      text: "Overview",
+      link: "/modules/",
+    },
+    {
+      text: "console",
+      link: "/modules/console",
+    },
+    {
+      text: "path",
+      link: "/modules/path",
+    },
+    {
+      text: "timer",
+      link: "/modules/timer",
+    },
+    {
+      text: "crypto",
+      link: "/modules/crypto",
+    },
+    {
+      text: "fs",
+      link: "/modules/fs",
+    },
+    {
+      text: "env",
+      link: "/modules/env",
+    },
+    {
+      text: "process",
+      link: "/modules/process",
+    },
+    {
+      text: "http",
+      link: "/modules/http",
+    },
+    {
+      text: "softadastra",
+      link: "/modules/softadastra",
+    },
+  ],
+};
+
+const recipes = {
+  text: "Recipes",
+  collapsed: true,
+  items: [
+    {
+      text: "Overview",
+      link: "/recipes/",
+    },
+    {
+      text: "Hello World",
+      link: "/recipes/hello-world",
+    },
+    {
+      text: "Read and Write Files",
+      link: "/recipes/read-write-files",
+    },
+    {
+      text: "Environment Variables",
+      link: "/recipes/environment-variables",
+    },
+    {
+      text: "Path Utilities",
+      link: "/recipes/path-utilities",
+    },
+    {
+      text: "Hashing",
+      link: "/recipes/hashing",
+    },
+    {
+      text: "HTTP Helpers",
+      link: "/recipes/http-helpers",
+    },
+    {
+      text: "Softadastra Storage",
+      link: "/recipes/softadastra-storage",
+    },
+  ],
+};
+
+const reference = {
+  text: "Reference",
+  collapsed: true,
+  items: [
+    {
+      text: "Overview",
+      link: "/reference/",
+    },
+    {
+      text: "kordex.json",
+      link: "/reference/kordex-json",
+    },
+    {
+      text: "package.json",
+      link: "/reference/package-json",
+    },
+    {
+      text: "Permissions",
+      link: "/reference/permissions",
+    },
+    {
+      text: "Module Imports",
+      link: "/reference/module-imports",
+    },
+  ],
+};
+
+const project = {
+  text: "Project",
+  collapsed: true,
+  items: [
+    {
+      text: "Roadmap",
+      link: "/roadmap",
+    },
+    {
+      text: "Changelog",
+      link: "/changelog",
+    },
+  ],
+};
+
+const sidebar = [guide, cli, modules, recipes, reference, project];
+
 export default defineConfig({
   lang: "en-US",
 
-  title: "Rix Documentation",
+  title: "Kordex Documentation",
   description:
-    "Rix is the unified userland library layer for Vix.cpp applications.",
+    "Kordex is a JavaScript and TypeScript runtime for reliable local-first applications.",
 
   base: "/",
 
@@ -17,32 +260,9 @@ export default defineConfig({
   },
 
   head: [
-    ["link", { rel: "icon", href: "/assets/pwa/favicon.ico" }],
-    [
-      "link",
-      {
-        rel: "icon",
-        type: "image/png",
-        sizes: "16x16",
-        href: "/assets/pwa/favicon-16x16.png",
-      },
-    ],
-    [
-      "link",
-      {
-        rel: "icon",
-        type: "image/png",
-        sizes: "32x32",
-        href: "/assets/pwa/favicon-32x32.png",
-      },
-    ],
-    [
-      "link",
-      {
-        rel: "apple-touch-icon",
-        href: "/assets/pwa/apple-touch-icon.png",
-      },
-    ],
+    ["link", { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
+    ["link", { rel: "icon", href: "/favicon.svg" }],
+    ["link", { rel: "apple-touch-icon", href: "/logo.png" }],
 
     ["meta", { name: "theme-color", content: "#0b0e14" }],
     ["meta", { name: "mobile-web-app-capable", content: "yes" }],
@@ -51,29 +271,30 @@ export default defineConfig({
       "meta",
       {
         name: "apple-mobile-web-app-title",
-        content: "Rix Docs",
+        content: "Kordex Docs",
       },
     ],
 
     ["meta", { property: "og:type", content: "website" }],
-    ["meta", { property: "og:title", content: "Rix Documentation" }],
+    ["meta", { property: "og:title", content: "Kordex Documentation" }],
     [
       "meta",
       {
         property: "og:description",
-        content: "Learn how to use Rix packages in Vix.cpp applications.",
+        content:
+          "Learn how to build reliable local-first JavaScript and TypeScript applications with Kordex.",
       },
     ],
-    ["meta", { property: "og:site_name", content: "Rix Documentation" }],
+    ["meta", { property: "og:site_name", content: "Kordex Documentation" }],
 
     ["meta", { name: "twitter:card", content: "summary_large_image" }],
-    ["meta", { name: "twitter:title", content: "Rix Documentation" }],
+    ["meta", { name: "twitter:title", content: "Kordex Documentation" }],
     [
       "meta",
       {
         name: "twitter:description",
         content:
-          "Rix provides optional userland libraries and a unified facade for Vix.cpp applications.",
+          "Kordex is a JavaScript and TypeScript runtime for reliable local-first applications.",
       },
     ],
   ],
@@ -111,8 +332,8 @@ export default defineConfig({
   },
 
   themeConfig: {
-    siteTitle: "Rix",
-    logo: "/assets/pwa/icon-192.png",
+    siteTitle: "Kordex",
+    logo: "/logo.png",
 
     appearance: true,
 
@@ -135,11 +356,11 @@ export default defineConfig({
     socialLinks: [
       {
         icon: "github",
-        link: "https://github.com/rixcpp/rix",
+        link: "https://github.com/softadastra/kordex",
       },
       {
         icon: "x",
-        link: "https://x.com/vix_cpp",
+        link: "https://x.com/softadastra",
       },
     ],
 
@@ -159,7 +380,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: "https://github.com/rixcpp/docs/edit/main/:path",
+      pattern: "https://github.com/softadastra/kordex-docs/edit/main/:path",
       text: "Edit this page on GitHub",
     },
 
@@ -170,7 +391,7 @@ export default defineConfig({
 
     footer: {
       message: "Released under the MIT License.",
-      copyright: "Copyright © 2026 Rix",
+      copyright: "Copyright © 2026 Softadastra",
     },
   },
 });

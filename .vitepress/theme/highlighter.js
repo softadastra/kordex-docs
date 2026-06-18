@@ -1,94 +1,70 @@
 /* ============================================================
-   Vix.cpp — Syntax highlighter
-   Pure JS, no dependencies, matches CodeBlock.vue palette
+   Kordex — Syntax highlighter
+   Pure JS, no dependencies, matches CodeBlock.vue palette.
+   Languages: JavaScript, TypeScript, Shell, JSON, plain text.
    ============================================================ */
 
-/* ── C++ keyword sets ── */
+/* ── JS/TS keyword sets ── */
 const KW = new Set([
-  "alignas",
-  "alignof",
-  "auto",
-  "bool",
+  "abstract",
+  "as",
+  "async",
+  "await",
   "break",
   "case",
   "catch",
-  "char",
-  "char8_t",
-  "char16_t",
-  "char32_t",
   "class",
-  "concept",
   "const",
-  "consteval",
-  "constexpr",
-  "constinit",
-  "const_cast",
   "continue",
-  "co_await",
-  "co_return",
-  "co_yield",
-  "decltype",
+  "debugger",
+  "declare",
   "default",
   "delete",
   "do",
-  "double",
-  "dynamic_cast",
   "else",
   "enum",
-  "explicit",
   "export",
-  "extern",
-  "false",
-  "float",
+  "extends",
+  "finally",
   "for",
-  "friend",
-  "goto",
+  "from",
+  "function",
+  "get",
   "if",
-  "inline",
-  "int",
-  "long",
-  "mutable",
+  "implements",
+  "import",
+  "in",
+  "infer",
+  "instanceof",
+  "interface",
+  "is",
+  "keyof",
+  "let",
   "namespace",
   "new",
-  "noexcept",
-  "nullptr",
-  "operator",
+  "of",
+  "override",
+  "package",
   "private",
   "protected",
   "public",
-  "register",
-  "reinterpret_cast",
-  "requires",
+  "readonly",
   "return",
-  "short",
-  "signed",
-  "sizeof",
+  "satisfies",
+  "set",
   "static",
-  "static_assert",
-  "static_cast",
-  "struct",
+  "super",
   "switch",
-  "template",
   "this",
-  "thread_local",
   "throw",
-  "true",
   "try",
-  "typedef",
-  "typeid",
-  "typename",
-  "union",
-  "unsigned",
-  "using",
-  "virtual",
+  "type",
+  "typeof",
+  "var",
   "void",
-  "volatile",
-  "wchar_t",
   "while",
-  "override",
-  "final",
-  "import",
-  "module",
+  "with",
+  "yield",
 ]);
 
 const CTRL_FLOW = new Set([
@@ -103,254 +79,173 @@ const CTRL_FLOW = new Set([
   "break",
   "continue",
   "return",
-  "goto",
   "throw",
   "try",
   "catch",
-  "co_await",
-  "co_return",
-  "co_yield",
-]);
-
-const TYPES = new Set([
-  "size_t",
-  "ssize_t",
-  "ptrdiff_t",
-  "intptr_t",
-  "uintptr_t",
-  "int8_t",
-  "int16_t",
-  "int32_t",
-  "int64_t",
-  "uint8_t",
-  "uint16_t",
-  "uint32_t",
-  "uint64_t",
-  "string",
-  "string_view",
-  "wstring",
-  "u8string",
-  "u16string",
-  "u32string",
-  "vector",
-  "array",
-  "deque",
-  "list",
-  "forward_list",
-  "map",
-  "multimap",
-  "unordered_map",
-  "unordered_multimap",
-  "set",
-  "multiset",
-  "unordered_set",
-  "unordered_multiset",
-  "stack",
-  "queue",
-  "priority_queue",
-  "pair",
-  "tuple",
-  "optional",
-  "variant",
-  "any",
-  "expected",
-  "unique_ptr",
-  "shared_ptr",
-  "weak_ptr",
-  "function",
-  "reference_wrapper",
-  "initializer_list",
-  "span",
-  "mdspan",
-  "ranges",
-  "thread",
-  "mutex",
-  "lock_guard",
-  "unique_lock",
-  "shared_lock",
-  "condition_variable",
-  "future",
-  "promise",
-  "async",
-  "atomic",
-  "atomic_ref",
-  "istream",
-  "ostream",
-  "iostream",
-  "ifstream",
-  "ofstream",
-  "fstream",
-  "istringstream",
-  "ostringstream",
-  "stringstream",
-  "regex",
-  "smatch",
-  "cmatch",
-  "chrono",
-  "filesystem",
-  "format",
-  "App",
-  "Request",
-  "Response",
-  "Context",
-  "Router",
-  "Middleware",
-  "Server",
-  "Client",
-  "Socket",
-  "Connection",
-  "Session",
-  "Handler",
-  "Config",
-  "Logger",
-  "Timer",
-  "Task",
-  "Channel",
-  "Buffer",
-  "Stream",
-  "ThreadPool",
-  "Future",
-  "Promise",
-  "Awaitable",
-]);
-
-const NS = new Set([
-  "std",
-  "vix",
-  "asio",
-  "net",
-  "http",
-  "ws",
-  "chrono",
-  "filesystem",
-  "ranges",
-  "views",
-  "this_thread",
-  "literals",
-  "placeholders",
-  "execution",
-  "threadpool",
-]);
-
-const BUILTINS = new Set([
-  "cout",
-  "cerr",
-  "clog",
-  "cin",
-  "endl",
-  "flush",
-  "move",
-  "forward",
-  "swap",
-  "exchange",
-  "make_unique",
-  "make_shared",
-  "make_pair",
-  "make_tuple",
-  "make_optional",
-  "static_pointer_cast",
-  "dynamic_pointer_cast",
-  "reinterpret_pointer_cast",
-  "begin",
-  "end",
-  "cbegin",
-  "cend",
-  "rbegin",
-  "rend",
-  "size",
-  "empty",
-  "data",
-  "get",
-  "holds_alternative",
-  "visit",
-  "min",
-  "max",
-  "clamp",
-  "abs",
-  "sort",
-  "find",
-  "find_if",
-  "for_each",
-  "transform",
-  "accumulate",
-  "reduce",
-  "copy",
-  "fill",
-  "remove",
-  "remove_if",
-  "replace",
-  "reverse",
-  "unique",
-  "all_of",
-  "any_of",
-  "none_of",
-  "count",
-  "count_if",
-  "push_back",
-  "push_front",
-  "pop_back",
-  "pop_front",
-  "emplace",
-  "emplace_back",
-  "insert",
-  "erase",
-  "clear",
-  "reserve",
-  "resize",
-  "shrink_to_fit",
-  "front",
-  "back",
-  "at",
-  "substr",
-  "append",
-  "assign",
-  "open",
-  "close",
-  "read",
-  "write",
-  "seek",
-  "tell",
-  "good",
-  "eof",
-  "fail",
-  "lock",
-  "unlock",
-  "try_lock",
-  "notify_one",
-  "notify_all",
-  "wait",
-  "load",
-  "store",
-  "fetch_add",
-  "fetch_sub",
-  "compare_exchange_strong",
-  "join",
-  "detach",
-  "joinable",
-  "get_id",
-  "sleep_for",
-  "sleep_until",
+  "finally",
+  "await",
   "yield",
-  "to_string",
-  "stoi",
-  "stol",
-  "stoll",
-  "stof",
-  "stod",
-  "stold",
-  "printf",
-  "sprintf",
-  "snprintf",
-  "fprintf",
-  "malloc",
-  "calloc",
-  "realloc",
-  "free",
-  "memcpy",
-  "memset",
-  "memmove",
+]);
+
+/* TS primitive + utility types and common runtime types */
+const TYPES = new Set([
+  "any",
+  "unknown",
+  "never",
+  "void",
+  "boolean",
+  "number",
+  "bigint",
+  "string",
+  "symbol",
+  "object",
+  "undefined",
+  "null",
+  "Array",
+  "ReadonlyArray",
+  "Record",
+  "Partial",
+  "Required",
+  "Readonly",
+  "Pick",
+  "Omit",
+  "Exclude",
+  "Extract",
+  "NonNullable",
+  "Parameters",
+  "ReturnType",
+  "Awaited",
+  "Promise",
+  "Map",
+  "Set",
+  "WeakMap",
+  "WeakSet",
+  "Date",
+  "RegExp",
+  "Error",
+  "TypeError",
+  "RangeError",
+  "Function",
+  "Object",
+  "Boolean",
+  "Number",
+  "String",
+  "Symbol",
+  "BigInt",
+  "Uint8Array",
+  "Int8Array",
+  "Uint16Array",
+  "Int16Array",
+  "Uint32Array",
+  "Int32Array",
+  "Float32Array",
+  "Float64Array",
+  "ArrayBuffer",
+  "Iterable",
+  "Iterator",
+  "AsyncIterable",
+]);
+
+/* literals / constants that get their own color */
+const LITERALS = new Set([
+  "true",
+  "false",
+  "null",
+  "undefined",
+  "NaN",
+  "Infinity",
+  "globalThis",
+]);
+
+/* global objects / built-in namespaces */
+const GLOBALS = new Set([
+  "console",
+  "Math",
+  "JSON",
+  "Object",
+  "Array",
+  "Promise",
+  "Reflect",
+  "Proxy",
+  "Symbol",
+  "globalThis",
+  "process",
+  "kordex",
+  "softadastra",
+]);
+
+/* built-in methods / common runtime functions */
+const BUILTINS = new Set([
+  "log",
+  "info",
+  "warn",
+  "error",
+  "debug",
+  "trace",
   "assert",
-  "static_assert",
+  "parse",
+  "stringify",
+  "keys",
+  "values",
+  "entries",
+  "assign",
+  "freeze",
+  "create",
+  "map",
+  "filter",
+  "reduce",
+  "forEach",
+  "find",
+  "findIndex",
+  "some",
+  "every",
+  "includes",
+  "indexOf",
+  "push",
+  "pop",
+  "shift",
+  "unshift",
+  "slice",
+  "splice",
+  "concat",
+  "join",
+  "split",
+  "trim",
+  "replace",
+  "replaceAll",
+  "toUpperCase",
+  "toLowerCase",
+  "startsWith",
+  "endsWith",
+  "padStart",
+  "padEnd",
+  "repeat",
+  "charAt",
+  "charCodeAt",
+  "substring",
+  "substr",
+  "then",
+  "catch",
+  "finally",
+  "resolve",
+  "reject",
+  "all",
+  "race",
+  "allSettled",
+  "setTimeout",
+  "setInterval",
+  "clearTimeout",
+  "clearInterval",
+  "require",
+  "isArray",
+  "from",
+  "of",
+  "has",
+  "set",
+  "get",
+  "delete",
+  "add",
+  "clear",
 ]);
 
 /* ── Helpers ── */
@@ -374,15 +269,22 @@ function normalizeShellText(raw) {
     .join("\n");
 }
 
-/* ── Comment splitter ── */
+/* ── Comment splitter (line comments only at top level) ── */
 function splitComment(line) {
   let inStr = false;
-  let inChar = false;
+  let strCh = "";
   for (let i = 0; i < line.length - 1; i++) {
     const c = line[i];
-    if (!inChar && c === '"' && line[i - 1] !== "\\") inStr = !inStr;
-    if (!inStr && c === "'" && line[i - 1] !== "\\") inChar = !inChar;
-    if (!inStr && !inChar && line[i] === "/" && line[i + 1] === "/") {
+    if (inStr) {
+      if (c === strCh && line[i - 1] !== "\\") inStr = false;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === "`") {
+      inStr = true;
+      strCh = c;
+      continue;
+    }
+    if (line[i] === "/" && line[i + 1] === "/") {
       const before = line.slice(0, i);
       if (before.endsWith("http:") || before.endsWith("https:")) continue;
       return { code: before, comment: line.slice(i) };
@@ -391,46 +293,34 @@ function splitComment(line) {
   return { code: line, comment: "" };
 }
 
-/* ── Preprocessor directive ── */
-function hlDirective(line) {
-  const m = line.match(
-    /^(\s*#\s*(?:include|define|pragma|if|ifdef|ifndef|endif|elif|else|undef|error|warning|line)\b)(.*)/,
-  );
-  if (!m) return null;
-
-  let out = wrap("cb-dir", m[1]);
-  const rest = m[2] || "";
-
-  const angle = rest.match(/^(\s*)(<[^>\n]*>)(.*)/);
-  if (angle) {
-    out += esc(angle[1]) + wrap("cb-inc", angle[2]) + hlInline(angle[3] || "");
-    return out;
-  }
-
-  const quote = rest.match(/^(\s*)("(?:[^"\\]|\\.)*")(.*)/);
-  if (quote) {
-    out += esc(quote[1]) + wrap("cb-inc", quote[2]) + hlInline(quote[3] || "");
-    return out;
-  }
-
-  return out + hlInline(rest);
-}
-
-/* ── Inline tokens ── */
+/* ── Inline tokens (JS/TS) ── */
 function hlInline(s) {
   let out = "";
   let i = 0;
-  const isStart = (c) => /[A-Za-z_]/.test(c);
-  const isId = (c) => /[A-Za-z0-9_]/.test(c);
+  const isStart = (c) => /[A-Za-z_$]/.test(c);
+  const isId = (c) => /[A-Za-z0-9_$]/.test(c);
 
   while (i < s.length) {
     const ch = s[i];
 
-    /* Strings */
-    if (ch === '"') {
+    /* Template strings */
+    if (ch === "`") {
       let j = i + 1;
       while (j < s.length) {
-        if (s[j] === '"' && s[j - 1] !== "\\") break;
+        if (s[j] === "`" && s[j - 1] !== "\\") break;
+        j++;
+      }
+      const str = s.slice(i, Math.min(j + 1, s.length));
+      out += wrap("cb-tmpl", str);
+      i += str.length;
+      continue;
+    }
+
+    /* Double / single quoted strings */
+    if (ch === '"' || ch === "'") {
+      let j = i + 1;
+      while (j < s.length) {
+        if (s[j] === ch && s[j - 1] !== "\\") break;
         j++;
       }
       const str = s.slice(i, Math.min(j + 1, s.length));
@@ -439,25 +329,12 @@ function hlInline(s) {
       continue;
     }
 
-    /* Char literals */
-    if (ch === "'") {
-      let j = i + 1;
-      while (j < s.length) {
-        if (s[j] === "'" && s[j - 1] !== "\\") break;
-        j++;
-      }
-      const lit = s.slice(i, Math.min(j + 1, s.length));
-      out += wrap("cb-char", lit);
-      i += lit.length;
-      continue;
-    }
-
     /* Numbers */
     if (/[0-9]/.test(ch)) {
       const m = s
         .slice(i)
         .match(
-          /^(0[xX][0-9A-Fa-f']+|0[bB][01']+|0[0-7']+|[0-9][0-9']*(?:\.[0-9']+)?(?:[eE][+-]?[0-9']+)?)([uUlLfFzZ]{0,3}\b)?/,
+          /^(0[xX][0-9A-Fa-f_]+|0[bB][01_]+|0[oO][0-7_]+|[0-9][0-9_]*(?:\.[0-9_]+)?(?:[eE][+-]?[0-9_]+)?)(n)?/,
         );
       if (m) {
         out += wrap("cb-num", m[0]);
@@ -483,16 +360,23 @@ function hlInline(s) {
         return "";
       })();
 
-      if (CTRL_FLOW.has(id)) out += wrap("cb-ctrl", id);
+      const isMember = prevNonSp === ".";
+
+      if (isMember) {
+        // After a dot: it's a member access or a method call,
+        // never a keyword/type/namespace (get/set/of/etc. are valid members).
+        if (nextNonSp === "(")
+          out += BUILTINS.has(id) ? wrap("cb-blt", id) : wrap("cb-fn", id);
+        else out += wrap("cb-mem", id);
+      } else if (LITERALS.has(id)) out += wrap("cb-const", id);
+      else if (CTRL_FLOW.has(id)) out += wrap("cb-ctrl", id);
       else if (KW.has(id)) out += wrap("cb-kw", id);
+      else if (GLOBALS.has(id) && prevNonSp !== ":") out += wrap("cb-ns", id);
       else if (TYPES.has(id)) out += wrap("cb-type", id);
-      else if (NS.has(id)) out += wrap("cb-ns", id);
-      else if (BUILTINS.has(id)) out += wrap("cb-blt", id);
-      else if (nextNonSp === "(") out += wrap("cb-fn", id);
-      else if (nextNonSp === "<" && /^[A-Z]/.test(id))
+      else if (nextNonSp === "(")
+        out += BUILTINS.has(id) ? wrap("cb-blt", id) : wrap("cb-fn", id);
+      else if (/^[A-Z][A-Za-z0-9_$]*$/.test(id) && nextNonSp !== "(")
         out += wrap("cb-type", id);
-      else if (prevNonSp === "." || prevNonSp === ">")
-        out += wrap("cb-mem", id);
       else if (/^[A-Z][A-Z0-9_]+$/.test(id)) out += wrap("cb-const", id);
       else out += wrap("cb-id", id);
 
@@ -501,63 +385,46 @@ function hlInline(s) {
     }
 
     /* Multi-char operators */
-    if (s.startsWith("::", i)) {
-      out += wrap("cb-op", "::");
-      i += 2;
+    const two = s.slice(i, i + 2);
+    const three = s.slice(i, i + 3);
+    if (
+      three === "===" ||
+      three === "!==" ||
+      three === "..." ||
+      three === "**="
+    ) {
+      out += wrap("cb-op", three);
+      i += 3;
       continue;
     }
-    if (s.startsWith("->", i)) {
-      out += wrap("cb-arrow", "->");
-      i += 2;
-      continue;
-    }
-    if (s.startsWith("<<", i)) {
-      out += wrap("cb-op", "<<");
-      i += 2;
-      continue;
-    }
-    if (s.startsWith(">>", i)) {
-      out += wrap("cb-op", ">>");
-      i += 2;
-      continue;
-    }
-    if (s.startsWith("<=", i)) {
-      out += wrap("cb-op", "<=");
-      i += 2;
-      continue;
-    }
-    if (s.startsWith(">=", i)) {
-      out += wrap("cb-op", ">=");
-      i += 2;
-      continue;
-    }
-    if (s.startsWith("==", i)) {
-      out += wrap("cb-op", "==");
-      i += 2;
-      continue;
-    }
-    if (s.startsWith("!=", i)) {
-      out += wrap("cb-op", "!=");
-      i += 2;
-      continue;
-    }
-    if (s.startsWith("&&", i)) {
-      out += wrap("cb-op", "&amp;&amp;");
-      i += 2;
-      continue;
-    }
-    if (s.startsWith("||", i)) {
-      out += wrap("cb-op", "||");
-      i += 2;
-      continue;
-    }
-    if (s.startsWith("+=", i)) {
-      out += wrap("cb-op", "+=");
-      i += 2;
-      continue;
-    }
-    if (s.startsWith("-=", i)) {
-      out += wrap("cb-op", "-=");
+    if (
+      [
+        "=>",
+        "==",
+        "!=",
+        "<=",
+        ">=",
+        "&&",
+        "||",
+        "??",
+        "?.",
+        "++",
+        "--",
+        "+=",
+        "-=",
+        "*=",
+        "/=",
+        "%=",
+        "**",
+        "<<",
+        ">>",
+        "|=",
+        "&=",
+        "^=",
+      ].includes(two)
+    ) {
+      const cls = two === "=>" ? "cb-arrow" : "cb-op";
+      out += wrap(cls, two);
       i += 2;
       continue;
     }
@@ -580,14 +447,71 @@ function hlInline(s) {
   return out.replace(/(https?:\/\/[^\s<]+)/g, `<span class="cb-url">$1</span>`);
 }
 
-/* ── Public: C++ highlighter ── */
-export function highlightCpp(raw) {
+/* ── Public: JavaScript / TypeScript highlighter ── */
+export function highlightJs(raw) {
   return String(raw ?? "")
     .split("\n")
     .map((line) => {
       const { code, comment } = splitComment(line);
-      const dir = hlDirective(code);
-      return (dir ?? hlInline(code)) + (comment ? wrap("cb-cmt", comment) : "");
+      return hlInline(code) + (comment ? wrap("cb-cmt", comment) : "");
+    })
+    .join("\n");
+}
+
+/* ── Public: JSON highlighter ── */
+export function highlightJson(raw) {
+  return String(raw ?? "")
+    .split("\n")
+    .map((line) => {
+      let out = "";
+      let i = 0;
+      while (i < line.length) {
+        const ch = line[i];
+
+        /* strings (keys or values) */
+        if (ch === '"') {
+          let j = i + 1;
+          while (j < line.length) {
+            if (line[j] === '"' && line[j - 1] !== "\\") break;
+            j++;
+          }
+          const str = line.slice(i, Math.min(j + 1, line.length));
+          /* lookahead: a colon after the string ⇒ it's a key */
+          let k = j + 1;
+          while (k < line.length && (line[k] === " " || line[k] === "\t")) k++;
+          out += wrap(line[k] === ":" ? "cb-key" : "cb-str", str);
+          i += str.length;
+          continue;
+        }
+
+        /* numbers */
+        if (/[-0-9]/.test(ch)) {
+          const m = line
+            .slice(i)
+            .match(/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/);
+          if (m && m[0]) {
+            out += wrap("cb-num", m[0]);
+            i += m[0].length;
+            continue;
+          }
+        }
+
+        /* literals */
+        const lit = line.slice(i).match(/^(true|false|null)\b/);
+        if (lit) {
+          out += wrap("cb-const", lit[0]);
+          i += lit[0].length;
+          continue;
+        }
+
+        if (ch === "{" || ch === "}") out += wrap("cb-brace", ch);
+        else if (ch === "[" || ch === "]") out += wrap("cb-bracket", ch);
+        else if (ch === ":") out += wrap("cb-op", ch);
+        else if (ch === ",") out += wrap("cb-semi", ch);
+        else out += esc(ch);
+        i++;
+      }
+      return out;
     })
     .join("\n");
 }
@@ -604,7 +528,7 @@ export function highlightShell(raw) {
 
   // First command on each line
   s = s.replace(
-    /(^\s*(?:<span[^>]*>.*?<\/span>\s*)?)([a-zA-Z0-9_.\/-]+)(\s+)/gm,
+    /(^\s*(?:<span[^>]*>.*?<\/span>\s*)?)([a-zA-Z0-9_.\/@-]+)(\s+)/gm,
     `$1<span class="cb-sh-cmd">$2</span>$3`,
   );
 
@@ -649,11 +573,28 @@ export function normalizeLang(lang) {
     .toLowerCase()
     .trim();
 
-  if (["sh", "bash", "zsh", "shell", "console", "terminal"].includes(l)) {
+  if (
+    [
+      "sh",
+      "bash",
+      "zsh",
+      "shell",
+      "console",
+      "terminal",
+      "powershell",
+      "ps1",
+    ].includes(l)
+  ) {
     return "shell";
   }
-  if (["cpp", "c++", "cc", "cxx", "hpp", "hxx", "h"].includes(l)) {
-    return "cpp";
+  if (["js", "javascript", "mjs", "cjs", "jsx"].includes(l)) {
+    return "js";
+  }
+  if (["ts", "typescript", "tsx", "mts", "cts"].includes(l)) {
+    return "ts";
+  }
+  if (["json", "jsonc", "json5"].includes(l)) {
+    return "json";
   }
   if (["txt", "text", "plain", "plaintext"].includes(l)) {
     return "text";

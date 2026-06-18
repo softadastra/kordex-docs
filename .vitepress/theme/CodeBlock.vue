@@ -83,7 +83,8 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import {
-  highlightCpp,
+  highlightJs,
+  highlightJson,
   highlightShell,
   highlightText,
   normalizeLang,
@@ -140,7 +141,12 @@ const activeLang = computed(
 const computedTitle = computed(() => {
   if (activeTab.value === "run") return "Terminal";
   if (activeTab.value === "out") return "Output";
-  return activeLang.value === "shell" ? "Shell" : "C++";
+  const l = normalizeLang(activeLang.value);
+  if (l === "shell") return "Shell";
+  if (l === "ts") return "TypeScript";
+  if (l === "json") return "JSON";
+  if (l === "js") return "JavaScript";
+  return "Kordex";
 });
 
 const chipsToShow = computed(() => (props.chips || []).filter(Boolean));
@@ -155,11 +161,33 @@ function guessLang(tabKey) {
   if (props.lang) return props.lang;
   if (tabKey === "run" || tabKey === "out") return "shell";
   const s = (props.code || "").trim();
-  if (s.includes("#include") || s.includes("int main") || s.includes("std::"))
-    return "cpp";
-  if (s.startsWith("~$") || s.includes(" vix ") || s.startsWith("$ "))
+
+  // Shell heuristics
+  if (
+    s.startsWith("~$") ||
+    s.startsWith("$ ") ||
+    /^(npx|npm|kordex|vix|curl|irm|cd|ls|sudo)\b/.test(s)
+  )
     return "shell";
-  return "cpp";
+
+  // JSON heuristics
+  if (
+    (s.startsWith("{") || s.startsWith("[")) &&
+    /["}\]]\s*$/.test(s) &&
+    !s.includes("=>") &&
+    !/\bfunction\b/.test(s)
+  )
+    return "json";
+
+  // TypeScript heuristics
+  if (
+    /:\s*(string|number|boolean|any|unknown|void)\b/.test(s) ||
+    /\binterface\b/.test(s) ||
+    /\btype\s+\w+\s*=/.test(s)
+  )
+    return "ts";
+
+  return "js";
 }
 
 const activeHtml = computed(() => {
@@ -167,7 +195,8 @@ const activeHtml = computed(() => {
   const lang = normalizeLang(activeLang.value);
 
   if (lang === "shell") return highlightShell(text);
-  if (lang === "cpp") return highlightCpp(text);
+  if (lang === "json") return highlightJson(text);
+  if (lang === "js" || lang === "ts") return highlightJs(text);
   return highlightText(text);
 });
 
@@ -413,124 +442,117 @@ html:not(.dark) .cb-body {
 }
 
 /* ════════════════════════════════════════════════
-   C++ SYNTAX TOKENS
-   Palette personnalisée Vix
+   JS / TS SYNTAX TOKENS
+   Kordex palette (VS Code Dark+ inspired)
    ════════════════════════════════════════════════ */
 
-/* Préprocesseur : #include, #define, etc. */
-.cb .cb-dir {
-  color: #c586c0;
-  font-weight: 600;
-}
-
-/* Inclusion : <iostream>, "vix.hpp" */
-.cb .cb-inc {
-  color: #ce9178;
-}
-
-/* Contrôle de flux : if, else, for, return, throw, try, catch */
+/* Control flow : if, else, for, return, await, throw */
 .cb .cb-ctrl {
   color: #c586c0;
   font-weight: 600;
 }
 
-/* Autres mots-clés : class, struct, const, static, template */
+/* Keywords : const, let, function, class, import, export, type */
 .cb .cb-kw {
   color: #569cd6;
   font-weight: 600;
 }
 
-/* Types : string, vector, optional, App, Request, ThreadPool */
+/* Types : string, number, Promise, Array, MyInterface */
 .cb .cb-type {
   color: #4ec9b0;
   font-weight: 600;
 }
 
-/* Namespaces : std, vix, chrono */
+/* Globals / namespaces : console, Math, JSON, kordex, softadastra */
 .cb .cb-ns {
   color: #4fc1ff;
 }
 
-/* Appels de fonction : app.get(...), res.json(...) */
+/* Function calls : foo(), softadastra.open() */
 .cb .cb-fn {
   color: #dcdcaa;
 }
 
-/* Builtins : cout, move, make_unique, push_back */
+/* Built-in methods : log, map, then, push */
 .cb .cb-blt {
   color: #dcdcaa;
-  font-style: italic;
 }
 
-/* Membres : .name, ->value */
+/* Members : .name, .value */
 .cb .cb-mem {
   color: #9cdcfe;
 }
 
-/* Identifiants standards */
+/* Identifiers */
 .cb .cb-id {
   color: #f8fafc;
 }
 
-/* Constantes SCREAMING_CASE */
+/* Constants / literals : true, false, null, undefined, SCREAMING_CASE */
 .cb .cb-const {
   color: #4fc1ff;
   font-weight: 600;
 }
 
-/* Chaînes de caractères */
+/* Strings */
 .cb .cb-str {
   color: #ce9178;
 }
 
-/* Caractères : 'x', '\n' */
-.cb .cb-char {
-  color: #d7ba7d;
+/* Template strings */
+.cb .cb-tmpl {
+  color: #ce9178;
 }
 
-/* Nombres */
+/* JSON keys */
+.cb .cb-key {
+  color: #9cdcfe;
+}
+
+/* Numbers */
 .cb .cb-num {
   color: #b5cea8;
   font-weight: 500;
 }
 
-/* Commentaires */
+/* Comments */
 .cb .cb-cmt {
   color: #6a9955;
-  font-style: italic;
 }
 
-/* Opérateurs : ::, +, =, <, > */
+/* Operators */
 .cb .cb-op {
-  color: rgba(230, 237, 243, 0.5);
+  color: rgba(230, 237, 243, 0.55);
 }
 
-/* Flèche -> */
+/* Arrow => */
 .cb .cb-arrow {
-  color: rgba(230, 237, 243, 0.65);
+  color: #569cd6;
+  font-weight: 600;
 }
 
-/* Accolades { } */
+/* Braces { } */
 .cb .cb-brace {
   color: #ffd700;
 }
 
-/* Parenthèses ( ) */
+/* Parentheses ( ) */
 .cb .cb-paren {
   color: rgba(230, 237, 243, 0.55);
 }
 
-/* Crochets [ ] */
+/* Brackets [ ] */
 .cb .cb-bracket {
   color: #da70d6;
 }
 
-/* Point-virgule ; */
+/* Semicolon ; */
 .cb .cb-semi {
   color: rgba(230, 237, 243, 0.82);
 }
 
-/* URLs dans le code */
+/* URLs */
 .cb .cb-url {
   color: #4fc1ff;
   text-decoration: underline;
@@ -568,26 +590,14 @@ html:not(.dark) .cb-body {
 }
 .cb .cb-sh-comment {
   color: #6a9955;
-  font-style: italic;
-}
-.cb .cb-blt {
-  color: #dcdcaa;
-  font-style: normal;
 }
 
-.cb .cb-cmt {
-  color: #6a9955;
-  font-style: normal;
-}
-
-.cb .cb-sh-comment {
-  color: #6a9955;
-  font-style: normal;
-}
+/* Kill all italics for a flat, serious look */
 .cb,
 .cb * {
   font-style: normal !important;
 }
+
 /* ════════════════════════════════════════════════
    RESPONSIVE
    ════════════════════════════════════════════════ */

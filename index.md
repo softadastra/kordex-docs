@@ -1,10 +1,10 @@
 ---
-title: Rix Documentation
+title: Kordex JavaScript runtime.
 layout: false
 ---
 
 <script setup>
-import DocsHomeHero from './.vitepress/theme/DocsHomeHero.vue'
+import HomePage from './.vitepress/theme/HomePage.vue'
 </script>
 
-<DocsHomeHero />
+<HomePage />
