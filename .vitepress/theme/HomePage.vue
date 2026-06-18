@@ -1,66 +1,66 @@
 <script setup>
 import CodeBlock from "./CodeBlock.vue";
 
-const heroCode = `#include <rix.hpp>
+const heroCode = `import { readText, writeText } from "kordex/fs";
+import { join } from "kordex/path";
+import { env } from "kordex/env";
 
-int main(){
-  auto auth = rix.auth.memory();
-  auto user = auth.register_user({"ada@example.com","password"});
-  if (user.failed()){
-    rix.debug.eprint("auth failed");
-    return 1;
-  }
+const workspace = env("KORDEX_WORKSPACE") ?? ".";
 
-  auto login = auth.login({"ada@example.com", "password"});
-  if (login.ok()){
-    rix.debug.print("signed in:", login.value().user.email());
-  }
+const file = join(workspace, "notes.txt");
 
-  return 0;
-}`;
+await writeText(file, "Hello from Kordex");
+
+const content = await readText(file);
+
+console.log(content);`;
 
 const features = [
   {
-    title: "Unified facade",
-    desc: "Use one clean rix.* entry point for the Rix packages mounted in your project.",
-    icon: "facade",
-    href: "/facade/",
-    tag: "API",
-  },
-  {
-    title: "Independent packages",
-    desc: "Use auth, csv, debug, pdf, and future packages independently when you do not need the full facade.",
-    icon: "packages",
-    href: "/packages/",
-    tag: "Packages",
-  },
-  {
-    title: "Built on Vix.cpp",
-    desc: "Rix does not replace Vix.cpp. It adds application-level libraries on top of the Vix runtime and workflow.",
+    title: "Local-first runtime",
+    desc: "Build JavaScript and TypeScript applications that can work reliably with local files, local state, and controlled permissions.",
     icon: "runtime",
-    href: "/guides/rix-and-vixcpp",
-    tag: "Vix.cpp",
+    href: "/guide/local-first",
+    tag: "Runtime",
   },
   {
-    title: "Stable package model",
-    desc: "Every package follows the same model: @rix/name, <rix/name.hpp>, rixlib::name, and rix.name.",
-    icon: "naming",
-    href: "/guides/package-model",
-    tag: "Design",
+    title: "Simple CLI workflow",
+    desc: "Create projects, run scripts, check permissions, build applications, and manage the Kordex workflow from one command line.",
+    icon: "cli",
+    href: "/cli/",
+    tag: "CLI",
+  },
+  {
+    title: "Built-in modules",
+    desc: "Use practical modules for files, paths, environment variables, process tools, timers, crypto, HTTP helpers, and console output.",
+    icon: "modules",
+    href: "/modules/",
+    tag: "Modules",
+  },
+  {
+    title: "Permission-aware design",
+    desc: "Keep applications predictable by making file, network, environment, and process access explicit instead of accidental.",
+    icon: "permissions",
+    href: "/guide/permissions",
+    tag: "Security",
   },
 ];
 
 function iconPath(name) {
-  if (name === "facade") {
-    return "M5 7h14M5 12h14M5 17h14";
+  if (name === "runtime") {
+    return "M12 3v4m0 10v4M3 12h4m10 0h4M6.3 6.3l2.8 2.8m5.8 5.8 2.8 2.8m0-11.4-2.8 2.8m-5.8 5.8-2.8 2.8";
   }
 
-  if (name === "packages") {
+  if (name === "cli") {
+    return "M4 6h16v12H4V6zm4 5 2 2-2 2m5 0h4";
+  }
+
+  if (name === "modules") {
     return "M4 7l8-4 8 4-8 4-8-4zm0 5l8 4 8-4M4 17l8 4 8-4";
   }
 
-  if (name === "runtime") {
-    return "M12 3v4m0 10v4M3 12h4m10 0h4M6.3 6.3l2.8 2.8m5.8 5.8 2.8 2.8m0-11.4-2.8 2.8m-5.8 5.8-2.8 2.8";
+  if (name === "permissions") {
+    return "M12 3l7 4v5c0 4.5-2.9 7.7-7 9-4.1-1.3-7-4.5-7-9V7l7-4zm-2 9 1.5 1.5L15 10";
   }
 
   return "M6 7h12M6 12h12M6 17h8";
@@ -68,85 +68,32 @@ function iconPath(name) {
 </script>
 
 <template>
-  <div class="rdh">
-    <div class="rdh-left">
-      <div class="rdh-eyebrow">
-        <span class="rdh-logo" aria-hidden="true">
-          <svg
-            viewBox="0 0 64 64"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <radialGradient id="rdh-logo-bg" cx="50%" cy="42%" r="70%">
-                <stop offset="0%" stop-color="#141922" />
-                <stop offset="58%" stop-color="#080B10" />
-                <stop offset="100%" stop-color="#030509" />
-              </radialGradient>
-
-              <linearGradient
-                id="rdh-logo-white"
-                x1="18"
-                y1="17"
-                x2="47"
-                y2="48"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop offset="0%" stop-color="#ffffff" />
-                <stop offset="100%" stop-color="#e9eef5" />
-              </linearGradient>
-
-              <linearGradient
-                id="rdh-logo-blue"
-                x1="28"
-                y1="24"
-                x2="37"
-                y2="33"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop offset="0%" stop-color="#1684ff" />
-                <stop offset="100%" stop-color="#0061ff" />
-              </linearGradient>
-            </defs>
-
-            <rect width="64" height="64" rx="16" fill="url(#rdh-logo-bg)" />
-
-            <g
-              stroke="url(#rdh-logo-white)"
-              stroke-width="5.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M23 21H36.5C43 21 48 25.8 48 32.2C48 36.4 45.8 40 42.4 42.2"
-              />
-              <path d="M21.5 37L40.5 46.2" />
-              <path d="M18 45L28.5 50" />
-            </g>
-
-            <circle cx="32.3" cy="30.8" r="4.2" fill="url(#rdh-logo-blue)" />
-          </svg>
+  <div class="kdh">
+    <div class="kdh-left">
+      <div class="kdh-eyebrow">
+        <span class="kdh-logo" aria-hidden="true">
+          <img src="/logo.png" alt="" />
         </span>
 
-        <span class="rdh-badge">Rix</span>
-        <span class="rdh-sep">·</span>
-        <span>Official Vix.cpp userland packages</span>
+        <span class="kdh-badge">Kordex</span>
+        <span class="kdh-sep">·</span>
+        <span>JavaScript and TypeScript local-first runtime</span>
       </div>
 
-      <h1 class="rdh-h1">
-        The userland layer<br class="rdh-br" />
-        for Vix.cpp projects.
+      <h1 class="kdh-h1">
+        Reliable local-first<br class="kdh-br" />
+        apps with JavaScript.
       </h1>
 
-      <p class="rdh-lead">
-        Rix brings application-level packages to Vix.cpp: utilities,
-        authentication, documents, data tools, developer helpers, and more. Vix
-        stays focused on the runtime, CLI, build workflow, registry, and core
-        foundations.
+      <p class="kdh-lead">
+        Kordex is a JavaScript and TypeScript runtime for building reliable
+        local-first applications with clear permissions, practical built-in
+        modules, and a simple developer workflow.
       </p>
-      <div class="rdh-actions">
-        <a class="rdh-btn rdh-btn--primary" href="/getting-started/">
-          Start with Rix
+
+      <div class="kdh-actions">
+        <a class="kdh-btn kdh-btn--primary" href="/guide/getting-started">
+          Get started
           <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
             <path
               d="M3 8h10M9 4l4 4-4 4"
@@ -158,70 +105,67 @@ function iconPath(name) {
           </svg>
         </a>
 
-        <a
-          class="rdh-btn rdh-btn--ghost"
-          href="https://registry.vixcpp.com/browse"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Browse packages
-        </a>
+        <a class="kdh-btn kdh-btn--ghost" href="/cli/"> Explore the CLI </a>
       </div>
 
-      <div class="rdh-model">
-        <div class="rdh-model-item">
-          <span class="rdh-model-k">Vix</span>
-          <span class="rdh-model-v">runtime, CLI, build workflow</span>
+      <div class="kdh-model">
+        <div class="kdh-model-item">
+          <span class="kdh-model-k">Kordex</span>
+          <span class="kdh-model-v"
+            >runtime, permissions, local-first execution</span
+          >
         </div>
 
-        <div class="rdh-model-arrow">→</div>
+        <div class="kdh-model-arrow">→</div>
 
-        <div class="rdh-model-item">
-          <span class="rdh-model-k">Rix</span>
-          <span class="rdh-model-v">userland libraries and facade</span>
+        <div class="kdh-model-item">
+          <span class="kdh-model-k">Modules</span>
+          <span class="kdh-model-v">fs, path, env, process, crypto, http</span>
         </div>
 
-        <div class="rdh-model-arrow">→</div>
+        <div class="kdh-model-arrow">→</div>
 
-        <div class="rdh-model-item">
-          <span class="rdh-model-k">Registry</span>
-          <span class="rdh-model-v">package metadata and versions</span>
+        <div class="kdh-model-item">
+          <span class="kdh-model-k">Apps</span>
+          <span class="kdh-model-v"
+            >scripts, tools, automation, local products</span
+          >
         </div>
       </div>
     </div>
 
-    <div class="rdh-right">
+    <div class="kdh-right">
       <CodeBlock
-        title="main.cpp"
-        lang="cpp"
-        :chips="['rix', 'csv', 'debug', 'pdf']"
+        title="main.ts"
+        lang="ts"
+        :chips="['kordex', 'typescript', 'local-first']"
         :code="heroCode"
         :maxHeight="480"
       />
 
-      <div class="rdh-terminal">
-        <div class="rdh-terminal-line">
-          <span class="rdh-run-prompt">$</span>
-          <span class="rdh-run-cmd">vix add @rix/rix</span>
+      <div class="kdh-terminal">
+        <div class="kdh-terminal-line">
+          <span class="kdh-run-prompt">$</span>
+          <span class="kdh-run-cmd">npm create kordex@latest my-app</span>
         </div>
 
-        <div class="rdh-terminal-line">
-          <span class="rdh-run-prompt">$</span>
-          <span class="rdh-run-cmd">vix install</span>
+        <div class="kdh-terminal-line">
+          <span class="kdh-run-prompt">$</span>
+          <span class="kdh-run-cmd">cd my-app</span>
         </div>
 
-        <div class="rdh-terminal-line">
-          <span class="rdh-run-prompt">$</span>
-          <span class="rdh-run-cmd">vix run main.cpp</span>
+        <div class="kdh-terminal-line">
+          <span class="kdh-run-prompt">$</span>
+          <span class="kdh-run-cmd">kordex run main.ts</span>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="rdh-cards">
-    <a v-for="f in features" :key="f.title" class="rdh-card" :href="f.href">
-      <div class="rdh-card-top">
-        <div class="rdh-card-icon">
+  <div class="kdh-cards">
+    <a v-for="f in features" :key="f.title" class="kdh-card" :href="f.href">
+      <div class="kdh-card-top">
+        <div class="kdh-card-icon">
           <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
             <path
               :d="iconPath(f.icon)"
@@ -233,13 +177,13 @@ function iconPath(name) {
           </svg>
         </div>
 
-        <span class="rdh-card-tag">{{ f.tag }}</span>
+        <span class="kdh-card-tag">{{ f.tag }}</span>
       </div>
 
-      <div class="rdh-card-title">{{ f.title }}</div>
-      <div class="rdh-card-desc">{{ f.desc }}</div>
+      <div class="kdh-card-title">{{ f.title }}</div>
+      <div class="kdh-card-desc">{{ f.desc }}</div>
 
-      <div class="rdh-card-arrow">
+      <div class="kdh-card-arrow">
         <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
           <path
             d="M3 8h10M9 4l4 4-4 4"
@@ -255,11 +199,11 @@ function iconPath(name) {
 </template>
 
 <style scoped>
-.rdh {
-  --accent: #0061ff;
-  --accent-light: #1684ff;
-  --accent-soft: rgba(0, 97, 255, 0.12);
-  --accent-border: rgba(0, 97, 255, 0.28);
+.kdh {
+  --accent: #22c55e;
+  --accent-light: #4ade80;
+  --accent-soft: rgba(34, 197, 94, 0.1);
+  --accent-border: rgba(34, 197, 94, 0.28);
 
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(380px, 0.92fr);
@@ -268,13 +212,13 @@ function iconPath(name) {
   padding: 24px 0 42px;
 }
 
-.rdh-left {
+.kdh-left {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.rdh-eyebrow {
+.kdh-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -284,21 +228,22 @@ function iconPath(name) {
   font-weight: 650;
 }
 
-.rdh-logo {
+.kdh-logo {
   display: inline-flex;
   width: 24px;
   height: 24px;
   flex-shrink: 0;
 }
 
-.rdh-logo svg {
+.kdh-logo img {
+  display: block;
   width: 24px;
   height: 24px;
-  display: block;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.25));
+  border-radius: 6px;
+  object-fit: contain;
 }
 
-.rdh-badge {
+.kdh-badge {
   display: inline-flex;
   align-items: center;
   padding: 3px 9px;
@@ -310,11 +255,11 @@ function iconPath(name) {
   font-weight: 800;
 }
 
-.rdh-sep {
+.kdh-sep {
   color: var(--vp-c-divider);
 }
 
-.rdh-h1 {
+.kdh-h1 {
   margin: 0 0 18px;
   color: var(--vp-c-text-1);
   font-size: clamp(2.15rem, 4.2vw, 3.35rem);
@@ -323,26 +268,26 @@ function iconPath(name) {
   font-weight: 920;
 }
 
-.rdh-br {
+.kdh-br {
   display: block;
 }
 
-.rdh-lead {
-  max-width: 54ch;
+.kdh-lead {
+  max-width: 56ch;
   margin: 0 0 26px;
   color: var(--vp-c-text-2);
   font-size: 15.8px;
   line-height: 1.75;
 }
 
-.rdh-actions {
+.kdh-actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
   margin-bottom: 28px;
 }
 
-.rdh-btn {
+.kdh-btn {
   min-height: 42px;
   display: inline-flex;
   align-items: center;
@@ -362,33 +307,33 @@ function iconPath(name) {
     box-shadow 0.14s ease;
 }
 
-.rdh-btn--primary {
+.kdh-btn--primary {
   color: #ffffff !important;
   background: linear-gradient(180deg, var(--accent-light), var(--accent));
-  border: 1px solid rgba(22, 132, 255, 0.45);
-  box-shadow: 0 14px 34px rgba(0, 97, 255, 0.28);
+  border: 1px solid rgba(34, 197, 94, 0.45);
+  box-shadow: 0 14px 34px rgba(34, 197, 94, 0.22);
 }
 
-.rdh-btn--primary:hover {
+.kdh-btn--primary:hover {
   color: #ffffff !important;
   transform: translateY(-1px);
-  box-shadow: 0 18px 42px rgba(0, 97, 255, 0.36);
+  box-shadow: 0 18px 42px rgba(34, 197, 94, 0.28);
 }
 
-.rdh-btn--ghost {
+.kdh-btn--ghost {
   color: var(--vp-c-text-1) !important;
   background: var(--vp-c-bg-soft);
   border: 1px solid var(--vp-c-divider);
 }
 
-.rdh-btn--ghost:hover {
+.kdh-btn--ghost:hover {
   color: var(--accent-light) !important;
   background: var(--accent-soft);
   border-color: var(--accent-border);
   transform: translateY(-1px);
 }
 
-.rdh-model {
+.kdh-model {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: stretch;
@@ -396,7 +341,7 @@ function iconPath(name) {
   max-width: 760px;
 }
 
-.rdh-model-item {
+.kdh-model-item {
   min-width: 0;
   padding: 12px 14px;
   border: 1px solid var(--vp-c-divider);
@@ -406,7 +351,7 @@ function iconPath(name) {
     var(--vp-c-bg-soft);
 }
 
-.rdh-model-k {
+.kdh-model-k {
   display: block;
   margin-bottom: 4px;
   color: var(--vp-c-text-1);
@@ -415,7 +360,7 @@ function iconPath(name) {
   letter-spacing: -0.02em;
 }
 
-.rdh-model-v {
+.kdh-model-v {
   display: block;
   color: var(--vp-c-text-2);
   font-size: 11.5px;
@@ -423,7 +368,7 @@ function iconPath(name) {
   font-weight: 560;
 }
 
-.rdh-model-arrow {
+.kdh-model-arrow {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -432,60 +377,57 @@ function iconPath(name) {
   opacity: 0.9;
 }
 
-.rdh-right {
+.kdh-right {
   display: flex;
   flex-direction: column;
   gap: 10px;
   min-width: 0;
 }
 
-.rdh-code-label {
-  color: var(--vp-c-text-2);
-  font-size: 11.5px;
-  font-weight: 800;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+.kdh-terminal {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+  font-family:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
 }
 
-.rdh-run {
+.kdh-terminal-line {
   display: flex;
   align-items: center;
   gap: 8px;
   min-width: 0;
   padding: 10px 14px;
-  border-radius: 11px;
-  border: 1px solid var(--vp-c-divider);
-  background: var(--vp-c-bg-soft);
-  font-family:
-    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    monospace;
+  border-bottom: 1px solid var(--vp-c-divider);
   font-size: 13px;
 }
 
-.rdh-run-prompt {
+.kdh-terminal-line:last-child {
+  border-bottom: 0;
+}
+
+.kdh-run-prompt {
   color: var(--accent-light);
   font-weight: 900;
 }
 
-.rdh-run-cmd {
+.kdh-run-cmd {
   min-width: 0;
   color: var(--vp-c-text-1);
   font-weight: 760;
   white-space: nowrap;
 }
 
-.rdh-run-comment {
-  margin-left: auto;
-  color: var(--vp-c-text-2);
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.rdh-cards {
-  --accent: #0061ff;
-  --accent-light: #1684ff;
-  --accent-soft: rgba(0, 97, 255, 0.12);
-  --accent-border: rgba(0, 97, 255, 0.28);
+.kdh-cards {
+  --accent: #22c55e;
+  --accent-light: #4ade80;
+  --accent-soft: rgba(34, 197, 94, 0.1);
+  --accent-border: rgba(34, 197, 94, 0.28);
 
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -493,7 +435,7 @@ function iconPath(name) {
   padding-bottom: 8px;
 }
 
-.rdh-card {
+.kdh-card {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -512,14 +454,14 @@ function iconPath(name) {
     background 0.14s ease;
 }
 
-.rdh-card:hover {
+.kdh-card:hover {
   border-color: var(--accent-border);
   background: var(--accent-soft);
   transform: translateY(-2px);
   text-decoration: none;
 }
 
-.rdh-card-top {
+.kdh-card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -527,7 +469,7 @@ function iconPath(name) {
   margin-bottom: 4px;
 }
 
-.rdh-card-icon {
+.kdh-card-icon {
   width: 34px;
   height: 34px;
   display: grid;
@@ -542,13 +484,13 @@ function iconPath(name) {
     background 0.14s ease;
 }
 
-.rdh-card:hover .rdh-card-icon {
+.kdh-card:hover .kdh-card-icon {
   color: var(--accent-light);
   border-color: var(--accent-border);
-  background: rgba(0, 97, 255, 0.08);
+  background: var(--accent-soft);
 }
 
-.rdh-card-tag {
+.kdh-card-tag {
   padding: 2px 8px;
   border-radius: 999px;
   color: var(--accent-light);
@@ -562,25 +504,25 @@ function iconPath(name) {
   transition: opacity 0.14s ease;
 }
 
-.rdh-card:hover .rdh-card-tag {
+.kdh-card:hover .kdh-card-tag {
   opacity: 1;
 }
 
-.rdh-card-title {
+.kdh-card-title {
   color: var(--vp-c-text-1);
   font-size: 14px;
   font-weight: 850;
   line-height: 1.25;
 }
 
-.rdh-card-desc {
+.kdh-card-desc {
   flex: 1;
   color: var(--vp-c-text-2);
   font-size: 12.5px;
   line-height: 1.6;
 }
 
-.rdh-card-arrow {
+.kdh-card-arrow {
   display: flex;
   align-items: center;
   color: var(--vp-c-text-2);
@@ -592,108 +534,104 @@ function iconPath(name) {
     color 0.14s ease;
 }
 
-.rdh-card:hover .rdh-card-arrow {
+.kdh-card:hover .kdh-card-arrow {
   opacity: 1;
   transform: translateX(0);
   color: var(--accent-light);
 }
 
 @media (max-width: 1100px) {
-  .rdh {
+  .kdh {
     grid-template-columns: 1fr;
     gap: 30px;
   }
 
-  .rdh-cards {
+  .kdh-cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 960px) {
-  .rdh {
+  .kdh {
     padding-top: 12px;
   }
 
-  .rdh-h1 {
+  .kdh-h1 {
     font-size: 2.25rem;
   }
 
-  .rdh-br {
+  .kdh-br {
     display: none;
   }
 
-  .rdh-lead {
+  .kdh-lead {
     max-width: 100%;
-  }
-
-  .rdh-run-comment {
-    display: none;
   }
 }
 
 @media (max-width: 720px) {
-  .rdh-model {
+  .kdh-model {
     grid-template-columns: 1fr;
   }
 
-  .rdh-model-arrow {
+  .kdh-model-arrow {
     display: none;
   }
 }
 
 @media (max-width: 640px) {
-  .rdh {
+  .kdh {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
   }
 
-  .rdh-left,
-  .rdh-right {
+  .kdh-left,
+  .kdh-right {
     width: 100%;
     max-width: 100%;
     min-width: 0;
   }
 
-  .rdh-h1 {
+  .kdh-h1 {
     font-size: 1.9rem;
   }
 
-  .rdh-lead {
+  .kdh-lead {
     font-size: 14.5px;
   }
 
-  .rdh-cards {
+  .kdh-cards {
     grid-template-columns: 1fr;
     gap: 10px;
   }
 
-  .rdh-card-tag,
-  .rdh-card-arrow {
+  .kdh-card-tag,
+  .kdh-card-arrow {
     opacity: 1;
   }
 
-  .rdh-card-arrow {
+  .kdh-card-arrow {
     transform: translateX(0);
   }
 
-  .rdh-right :deep(.code-block),
-  .rdh-right :deep(.vix-code-block),
-  .rdh-right :deep(pre),
-  .rdh-right :deep(code) {
+  .kdh-right :deep(.cb),
+  .kdh-right :deep(.code-block),
+  .kdh-right :deep(.vix-code-block),
+  .kdh-right :deep(pre),
+  .kdh-right :deep(code) {
     max-width: 100%;
     min-width: 0;
   }
 
-  .rdh-right :deep(pre) {
+  .kdh-right :deep(pre) {
     overflow-x: auto;
   }
 
-  .rdh-run {
+  .kdh-terminal {
     width: 100%;
     max-width: 100%;
     overflow-x: auto;
-    white-space: nowrap;
   }
 }
 </style>
