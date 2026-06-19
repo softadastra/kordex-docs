@@ -3,16 +3,10 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import App from "./App.vue";
 import Home from "./pages/Home.vue";
-import About from "./pages/About.vue";
-import Download from "./pages/Download.vue";
 
 import "./style.css";
 
-const routes = [
-  { path: "/", component: Home },
-  { path: "/about", component: About },
-  { path: "/download", component: Download },
-];
+const routes = [{ path: "/", component: Home }];
 
 const router = createRouter({
   history: createWebHistory(),
