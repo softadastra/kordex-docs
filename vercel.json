@@ -1,7 +1,16 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": ".vitepress/dist",
-  "installCommand": "npm install",
+  "outputDirectory": "dist",
+  "framework": "vite",
   "cleanUrls": true,
-  "trailingSlash": false
+  "rewrites": [
+    {
+      "source": "/docs",
+      "destination": "/docs/"
+    },
+    {
+      "source": "/:path((?!docs(?:/|$)|assets(?:/|$)|.*\\.[^/]+$).*)",
+      "destination": "/index.html"
+    }
+  ]
 }

@@ -1,7 +1,7 @@
 <script setup>
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import DefaultTheme from "vitepress/theme";
-import { useRoute } from "vitepress";
+import { useRoute, withBase } from "vitepress";
 import Breadcrumb from "./Breadcrumb.vue";
 
 const { Layout } = DefaultTheme;
@@ -40,22 +40,46 @@ const socials = [
   },
 ];
 
+const isExternalLink = (href) => {
+  return /^https?:\/\//.test(href);
+};
+
+const resolveHref = (href) => {
+  if (!href) {
+    return withBase("/");
+  }
+
+  if (isExternalLink(href)) {
+    return href;
+  }
+
+  return withBase(href);
+};
+
 const normalizePath = (path) => {
   if (!path) {
     return "/";
   }
 
-  const clean = path.split("#")[0].split("?")[0];
+  let clean = path.split("#")[0].split("?")[0];
+
+  if (clean.startsWith("/docs/")) {
+    clean = clean.slice("/docs".length);
+  }
+
+  if (clean === "/docs") {
+    clean = "/";
+  }
 
   if (clean.length > 1 && clean.endsWith("/")) {
-    return clean.slice(0, -1);
+    clean = clean.slice(0, -1);
   }
 
   return clean;
 };
 
 const isActiveLink = (href) => {
-  if (!href || href.startsWith("http")) {
+  if (!href || isExternalLink(href)) {
     return false;
   }
 

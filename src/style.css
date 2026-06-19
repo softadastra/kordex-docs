@@ -1,0 +1,149 @@
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background: #070707;
+  color: #f6f6f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(255, 153, 0, 0.16),
+      transparent 34rem
+    ),
+    #070707;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.site {
+  min-height: 100vh;
+}
+
+.nav {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 22px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: #ff9900;
+  color: #050505;
+  font-weight: 900;
+}
+
+.nav nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  color: #d8d8d8;
+  font-size: 14px;
+}
+
+.nav nav a:hover {
+  color: #ff9900;
+}
+
+.hero {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 120px 0 90px;
+}
+
+.hero section {
+  max-width: 780px;
+}
+
+.eyebrow {
+  color: #ff9900;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 13px;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(42px, 8vw, 86px);
+  line-height: 0.95;
+  letter-spacing: -0.07em;
+}
+
+.lead {
+  margin-top: 26px;
+  max-width: 650px;
+  color: #c9c9c9;
+  font-size: 20px;
+  line-height: 1.65;
+}
+
+.actions {
+  margin-top: 36px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.btn.primary {
+  background: #ff9900;
+  color: #050505;
+}
+
+.btn.secondary {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f6f6f6;
+}
+
+.page {
+  width: min(960px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 90px 0;
+}
+
+.page p {
+  color: #c9c9c9;
+  font-size: 18px;
+  line-height: 1.7;
+}
