@@ -1,1 +1,225 @@
-<h1>Kordex docs</h1>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Kordex | Reliable local-first JavaScript</title>
+
+    <meta
+      name="description"
+      content="Kordex is a JavaScript and TypeScript runtime for reliable local-first applications, explicit native permissions, native kordex modules, and durable local state powered by Softadastra."
+    />
+
+    <meta
+      name="keywords"
+      content="Kordex, Softadastra, JavaScript runtime, TypeScript runtime, local-first JavaScript, offline-first, durable local state, explicit permissions, native modules, kordex modules, Softadastra storage, runtime, CLI"
+    />
+
+    <meta name="author" content="Softadastra" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0e1117" />
+
+    <link rel="canonical" href="https://kordex.softadastra.com/" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo.svg" />
+
+    <meta property="og:site_name" content="Kordex" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Kordex | Reliable local-first JavaScript"
+    />
+    <meta
+      property="og:description"
+      content="Run JavaScript and TypeScript locally with explicit native permissions, kordex modules, and durable local-first state powered by Softadastra."
+    />
+    <meta property="og:url" content="https://kordex.softadastra.com/" />
+    <meta
+      property="og:image"
+      content="https://kordex.softadastra.com/og-image.png"
+    />
+    <meta
+      property="og:image:secure_url"
+      content="https://kordex.softadastra.com/og-image.png"
+    />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Kordex, reliable local-first JavaScript runtime by Softadastra."
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Kordex | Reliable local-first JavaScript"
+    />
+    <meta
+      name="twitter:description"
+      content="A JavaScript and TypeScript runtime for local execution, explicit native permissions, and durable local-first state."
+    />
+    <meta
+      name="twitter:image"
+      content="https://kordex.softadastra.com/og-image.png"
+    />
+    <meta name="twitter:site" content="@softadastra" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Kordex",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Linux",
+        "url": "https://kordex.softadastra.com/",
+        "image": "https://kordex.softadastra.com/og-image.png",
+        "logo": "https://kordex.softadastra.com/logo.svg",
+        "author": {
+          "@type": "Organization",
+          "name": "Softadastra",
+          "url": "https://softadastra.com/"
+        },
+        "description": "Kordex is a JavaScript and TypeScript runtime for reliable local-first applications, explicit native permissions, native kordex modules, and durable local state powered by Softadastra.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "sameAs": [
+          "https://github.com/softadastra",
+          "https://x.com/softadastra"
+        ]
+      }
+    </script>
+
+    <style>
+      :root {
+        --kx-loading-bg: #0e1117;
+        --kx-loading-dot: #ff9900;
+        --kx-loading-cream: #fceccf;
+      }
+
+      #app-loading {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(
+            circle at 50% 42%,
+            rgba(255, 153, 0, 0.12),
+            transparent 34%
+          ),
+          linear-gradient(180deg, #101218 0%, var(--kx-loading-bg) 100%);
+        opacity: 1;
+        visibility: visible;
+        transition:
+          opacity 180ms ease,
+          visibility 0ms linear 180ms;
+      }
+
+      #app-loading.is-hiding {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .kx-loader {
+        display: grid;
+        gap: 22px;
+        justify-items: center;
+      }
+
+      .kx-loader-mark {
+        width: 72px;
+        height: 72px;
+        object-fit: contain;
+        filter: drop-shadow(0 18px 34px rgba(255, 153, 0, 0.22));
+      }
+
+      .kx-loader-dots {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .kx-loader-dots span {
+        width: 14px;
+        height: 14px;
+        border-radius: 999px;
+        background: var(--kx-loading-dot);
+        opacity: 0.25;
+        transform: translateY(0);
+        animation: kxDot 1.15s ease-in-out infinite;
+        box-shadow: 0 0 26px rgba(255, 153, 0, 0.35);
+      }
+
+      .kx-loader-dots span:nth-child(2) {
+        background: var(--kx-loading-cream);
+        animation-delay: 0.15s;
+      }
+
+      .kx-loader-dots span:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+
+      @keyframes kxDot {
+        0%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.25;
+        }
+
+        40% {
+          transform: translateY(-10px);
+          opacity: 0.95;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .kx-loader-dots span {
+          animation: none;
+          opacity: 0.65;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app-loading" aria-label="Loading Kordex">
+      <div class="kx-loader" aria-hidden="true">
+        <img class="kx-loader-mark" src="/logo.svg" alt="" />
+
+        <div class="kx-loader-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="app"></div>
+
+    <script type="module" src="/src/main.js"></script>
+
+    <script>
+      window.addEventListener("load", function () {
+        const loader = document.getElementById("app-loading");
+
+        if (!loader) {
+          return;
+        }
+
+        loader.classList.add("is-hiding");
+
+        window.setTimeout(function () {
+          loader.remove();
+        }, 240);
+      });
+    </script>
+  </body>
+</html>
